@@ -1,5 +1,5 @@
 import torch
-from modules.trainer import Trainer
+from modules.trainer import StandardTrainer
 from modules.net import Net
 import matplotlib.pyplot as plt
 from modules.scaler import GaussianScaler
@@ -24,7 +24,7 @@ def gen_data():
 
 def train(filename: str, epochs: int):
     net = Net(1, 100, 1)
-    trainer = Trainer(net)
+    trainer = StandardTrainer(net)
     trainer.fit(t, y, epochs=epochs, filename=filename)
 
 def load(filename):

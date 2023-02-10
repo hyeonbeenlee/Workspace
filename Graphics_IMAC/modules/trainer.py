@@ -5,7 +5,7 @@ from .utils import mse
 from .scaler import GaussianScaler, MinmaxScaler
 from sklearn.metrics import r2_score
 
-class Trainer:
+class StandardTrainer:
     def __init__(self, net: nn.Module):
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         self.net = self.to_device(net)
