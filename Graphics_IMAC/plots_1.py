@@ -3,6 +3,7 @@ from modules.trainer import StandardTrainer
 from modules.net import Net
 import matplotlib.pyplot as plt
 from modules.scaler import GaussianScaler
+from torch import pi
 
 def f(t, w=1, A=1, phi=0):
     return A * torch.sin(w * t + phi)
@@ -11,10 +12,10 @@ def gen_data():
     n_timesteps = 1000
     n_frequencies = 1000
     t = torch.linspace(0, 20, n_timesteps).reshape(-1, 1)
-    y = f(t, 1, 1, torch.rand(1) * torch.pi - torch.pi / 2)
+    y = f(t, 1, 1, torch.rand(1) * pi - pi / 2)
     w = torch.linspace(0, 4, n_frequencies)
     for i in range(n_frequencies):
-        y += f(t, w[i], 1, torch.rand(1) * 2 * torch.pi - torch.pi)
+        y += f(t, w[i], 1, torch.rand(1) * 2 * pi - pi)
     # y[:int(0.3 * n_timesteps)] = 0
     # y[int(0.7 * n_timesteps):n_timesteps] = 0
     torch.save({'t': t, 'y': y}, f'data/{filename}.pt')
@@ -51,8 +52,8 @@ if __name__ == '__main__':
     torch.random.manual_seed(0)
     torch.cuda.manual_seed_all(0)
     
-    filename = 'net2'
-    # gen_data()
+    filename = 'net_impulse'
+    gen_data()
     
     t=torch.load(f'data/{filename}.pt')['t']
     y=torch.load(f'data/{filename}.pt')['y']

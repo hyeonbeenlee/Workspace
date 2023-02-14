@@ -34,6 +34,8 @@ class StandardTrainer:
         self.setup_dataloader(data_input, data_output)
         self.setup_optimizer(lr=1e-2)
         
+        best_loss = torch.inf
+        best_state_dict = None
         for epoch in range(epochs):
             total_y_true = torch.empty(self.data_output_shape)
             total_y_pred = torch.empty(self.data_output_shape)
@@ -64,7 +66,13 @@ class StandardTrainer:
             
             total_loss = mse(total_y_true, total_y_pred)
             total_r2 = r2_score(total_y_true, total_y_pred)
+            if total_loss < best_loss:
+                best_loss = total_loss
+                best_state_dict = self.net.state_dict()
+                best_epoch = epoch + 1
+            
             print(f"Epoch {epoch + 1}, MSE={total_loss.item():.5f}, R2={total_r2:.5f}")
         
-        result = {'scaler_i': self.scaler_i, 'scaler_o': self.scaler_o, 'state_dict': self.net.state_dict()}
+        print(f"Saving result from {best_epoch}")
+        result = {'scaler_i': self.scaler_i, 'scaler_o': self.scaler_o, 'state_dict': best_state_dict}
         torch.save(result, f'models/{filename}.pt')
